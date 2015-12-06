@@ -1,7 +1,7 @@
 """Do some stuff with polynomials.
 
 Going to try and write up a nice docstring to get rid of the error.
-We'll see.
+We'll see... It worked!
 """
 
 import sys
