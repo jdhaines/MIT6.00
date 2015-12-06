@@ -8,7 +8,6 @@ import sys
 # 6.00 Problem Set 2
 #
 # Successive Approximation
-#
 
 
 def call_poly():
