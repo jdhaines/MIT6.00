@@ -9,6 +9,7 @@ Template for word game.
 
 """
 import random
+from sys import exit
 # import string
 
 VOWELS = 'aeiou'
@@ -83,6 +84,7 @@ def get_word_score(word, n):
     worth 3, C is worth 3, D is worth 2, E is worth 1, and so on.
 
     word: string (lowercase letters)
+    n: int, number of letters required for a bonus score
     returns: int >= 0
     """
     score = 0  # init score to zero on each call
@@ -135,7 +137,7 @@ def deal_hand(n):
     returns: dictionary (string -> int)
     """
     hand = {}
-    num_vowels = n / 3
+    num_vowels = round(n / 3)
 
     for i in range(num_vowels):
         x = VOWELS[random.randrange(0, len(VOWELS))]
@@ -169,8 +171,18 @@ def update_hand(hand, word):
     hand: dictionary (string -> int)
     returns: dictionary (string -> int)
     """
-    # TO DO ...
+    # Get the old hand into a list.
+    interim_hand = []
+    for letter in hand.keys():
+        for j in range(hand[letter]):
+            interim_hand.append(letter)
 
+    # Remove letters of word from interim_hand
+    for i in list(word):
+        interim_hand.remove(i)
+
+    # return the new hand
+    return(get_frequency_dict(interim_hand))
 #
 # Problem #3: Test word validity
 #
@@ -188,7 +200,21 @@ def is_valid_word(word, hand, word_list):
     hand: dictionary (string -> int)
     word_list: list of lowercase strings
     """
-    # TO DO...
+    word_dict = get_frequency_dict(word)
+    try:
+        for key in word_dict.keys():
+            if word_dict[key] > hand[key]:
+                # print('More {}s in word than in hand.'.format(key))
+                return False
+            # else:
+                # print('Less or equal {}s in word than in hand.'.format(key))
+    except KeyError:
+            return False
+
+    if ''.join(list(word)) in word_list:
+        return True
+    else:
+        return False
 
 
 def calculate_handlen(hand):
@@ -232,7 +258,16 @@ def play_hand(hand, word_list):
       word_list: list of lowercase strings
 
     """
-    # TO DO ...
+    end_hand == False
+
+    while calculate_handlen(hand) > 0 and end_hand is False:
+        print('Your Hand: {}'.format(display_hand(hand)))
+        word = input('Enter word, or a "." to indicate that you are\
+            finished: ')
+        if is_valid_word(word) is False:
+            word = input('That word is invalid, please enter a new word: ')
+            
+
 
 #
 # Problem #5: Playing a game
@@ -255,7 +290,25 @@ def play_game(word_list):
 
     * If the user inputs anything else, ask them again.
     """
-    # TO DO...
+    old_hand = deal_hand(HAND_SIZE)  # Make sure old hand isn't empty
+    new_hand = deal_hand(HAND_SIZE)
+
+    # Opening Message
+    print('Welcome to the word game.')
+    print('If you would like to play a new (random) hand, press "n".')
+    print('If you would like to play the last hand again, press "r".')
+    print('If you would like to exit, press "e"')
+    choice = input('>>> ')
+
+    if choice == 'n':
+        play_hand(new_hand, word_list)
+        old_hand = new_hand  # Update the old hand with the new one
+    elif choice == 'r':
+        play_hand(old_hand, word_list)
+    elif choice == 'e':
+        exit()
+    else:
+        print('Your selection was not understood.  Try again... ')
 
 #
 # Build data structures used for entire session and play game
