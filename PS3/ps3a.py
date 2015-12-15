@@ -113,10 +113,13 @@ def display_hand(hand):
 
     hand: dictionary (string -> int)
     """
+    display = []
     for letter in hand.keys():
         for j in range(hand[letter]):
-            print(letter,)             # print all on the same line
-    print                               # print an empty line
+            display.append(letter)
+            # print(letter,)             # print all on the same line
+    display = ' '.join(display)          # print an empty line
+    return display
 
 #
 # Make sure you understand how this function works and what it does!
@@ -259,14 +262,34 @@ def play_hand(hand, word_list):
 
     """
     end_hand = 0
-
+    hand_total = 0
     while calculate_handlen(hand) > 0 and end_hand == 0:
+        print()
         print('Your Hand: {}'.format(display_hand(hand)))
-        word = input('Enter word, or a "." to indicate that you are\
-            finished: ')
-        if is_valid_word(word) is False:
-            word = input('That word is invalid, please enter a new word: ')
+        print()
 
+        # loop until given a valid word
+        valid_word = 0
+        word_total = 0
+        while valid_word == 0:
+            print('Enter a valid word, or a "." to indicate you are finished.')
+            word = input('>>>')
+            if word == '.':
+                print('Total Score: {}'.format(hand_total))
+                return hand_total
+            elif is_valid_word(word, hand, word_list) is False:
+                print('That word is invalid.')
+                valid_word = 0
+            else:
+                word_total = get_word_score(word, calculate_handlen(hand))
+                hand_total += word_total
+                print('"{}"" earned {} points.  Hand total: {} points.'.format(
+                      word, word_total, hand_total))
+                valid_word = 1
+
+        hand = update_hand(hand, word)
+
+    # Return
 
 #
 # Problem #5: Playing a game
@@ -292,20 +315,22 @@ def play_game(word_list):
     old_hand = deal_hand(HAND_SIZE)  # Make sure old hand isn't empty
 
     # Opening Message
+    score = 0
     play = 1
     while play == 1:
         new_hand = deal_hand(HAND_SIZE)
         print('Welcome to the word game.')
+        print('Your score is: {}'.format(score))
         print('If you would like to play a new (random) hand, press "n".')
         print('If you would like to play the last hand again, press "r".')
         print('If you would like to exit, press "e"')
         choice = input('>>> ')
 
         if choice == 'n':
-            play_hand(new_hand, word_list)
+            score += play_hand(new_hand, word_list)
             old_hand = new_hand  # Update the old hand with the new one
         elif choice == 'r':
-            play_hand(old_hand, word_list)
+            score += play_hand(old_hand, word_list)
         elif choice == 'e':
             play = 0
         else:

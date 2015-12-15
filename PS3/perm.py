@@ -5,27 +5,27 @@ def xcombinations(items, n):
     if n == 0:
         yield []
     else:
-        for i in xrange(len(items)):
-            for cc in xcombinations(items[:i]+items[i+1:], n-1):
-                yield [items[i]]+cc
+        for i in range(len(items)):
+            for cc in xcombinations(items[:i] + items[i + 1:], n - 1):
+                yield [items[i]] + cc
 
 
-def xuniqueCombinations(items, n):
+def xuniquecombinations(items, n):
     if n == 0:
         yield []
     else:
-        for i in xrange(len(items)):
-            for cc in xuniqueCombinations(items[i+1:], n-1):
-                yield [items[i]]+cc
+        for i in range(len(items)):
+            for cc in xuniquecombinations(items[i + 1:], n - 1):
+                yield [items[i]] + cc
 
 
 def xselections(items, n):
     if n == 0:
         yield []
     else:
-        for i in xrange(len(items)):
-            for ss in xselections(items, n-1):
-                yield [items[i]]+ss
+        for i in range(len(items)):
+            for ss in xselections(items, n - 1):
+                yield [items[i]] + ss
 
 
 def xpermutations(items):
@@ -33,13 +33,21 @@ def xpermutations(items):
 
 
 def get_perms(hand, n):
+    """
+    Takes in the current hand and a number which
+    must be less than or equal to the size of the hand. It returns all
+    possible permutations of size n given the letters in the hand.
+
+    hand: dictionary (string -> int) n: int bounded by 0 < n >= len(hand)
+    returns list (string)
+    """
     handlist = []
     for key in hand:
         for i in range(hand[key]):
             handlist.append(key)
     l = []
     toret = []
-    for c in xuniqueCombinations(handlist, n):
+    for c in xuniquecombinations(handlist, n):
         l.append(c)
     for j in l:
         for p in xpermutations(j):
@@ -58,7 +66,7 @@ if __name__ == "__main__":
 
     print
     print("Unique Combinations of 2 letters from 'love'")
-    for uc in xuniqueCombinations(['l', 'o', 'v', 'e'], 2):
+    for uc in xuniquecombinations(['l', 'o', 'v', 'e'], 2):
         print(''.join(uc))
 
     print
