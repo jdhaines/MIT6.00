@@ -258,15 +258,14 @@ def play_hand(hand, word_list):
       word_list: list of lowercase strings
 
     """
-    end_hand == False
+    end_hand = 0
 
-    while calculate_handlen(hand) > 0 and end_hand is False:
+    while calculate_handlen(hand) > 0 and end_hand == 0:
         print('Your Hand: {}'.format(display_hand(hand)))
         word = input('Enter word, or a "." to indicate that you are\
             finished: ')
         if is_valid_word(word) is False:
             word = input('That word is invalid, please enter a new word: ')
-            
 
 
 #
@@ -291,28 +290,33 @@ def play_game(word_list):
     * If the user inputs anything else, ask them again.
     """
     old_hand = deal_hand(HAND_SIZE)  # Make sure old hand isn't empty
-    new_hand = deal_hand(HAND_SIZE)
 
     # Opening Message
-    print('Welcome to the word game.')
-    print('If you would like to play a new (random) hand, press "n".')
-    print('If you would like to play the last hand again, press "r".')
-    print('If you would like to exit, press "e"')
-    choice = input('>>> ')
+    play = 1
+    while play == 1:
+        new_hand = deal_hand(HAND_SIZE)
+        print('Welcome to the word game.')
+        print('If you would like to play a new (random) hand, press "n".')
+        print('If you would like to play the last hand again, press "r".')
+        print('If you would like to exit, press "e"')
+        choice = input('>>> ')
 
-    if choice == 'n':
-        play_hand(new_hand, word_list)
-        old_hand = new_hand  # Update the old hand with the new one
-    elif choice == 'r':
-        play_hand(old_hand, word_list)
-    elif choice == 'e':
-        exit()
-    else:
-        print('Your selection was not understood.  Try again... ')
+        if choice == 'n':
+            play_hand(new_hand, word_list)
+            old_hand = new_hand  # Update the old hand with the new one
+        elif choice == 'r':
+            play_hand(old_hand, word_list)
+        elif choice == 'e':
+            play = 0
+        else:
+            print('Your selection was not understood.  Try again... ')
 
+    print('Thanks for playing!')
+    exit()
 #
 # Build data structures used for entire session and play game
 #
+
 if __name__ == '__main__':
     word_list = load_words()
     play_game(word_list)
